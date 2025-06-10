@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ProductCard } from "./ProductCard";
 
 const meta: Meta<typeof ProductCard> = {
@@ -16,7 +16,7 @@ export const Default: Story = {
       title: "Ноутбук ASUS",
       origin: "Россия",
       price: 49900,
-      currency: "RUB",
+      currency: "USD",
       imageUrl: "https://placehold.co/300x200?text=Product",
    },
 };

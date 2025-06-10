@@ -1,7 +1,6 @@
-export type ProductCardProps = {
-   title: string;
-   origin: string;
-   price: number;
-   currency: "RUB" | "USD" | "EUR";
-   imageUrl: string;
-};
+import type { IProduct, TCurrency } from "../../shared/types";
+
+export interface ProductCardProps extends IProduct {
+   currency: TCurrency;
+   isLoading?: boolean;
+}

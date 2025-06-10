@@ -16,6 +16,6 @@ describe("ProductCard", () => {
 
       expect(screen.getByText("Стиральная машинка")).toBeInTheDocument();
       expect(screen.getByText("Производитель: Франция")).toBeInTheDocument();
-      expect(screen.getByText(/993\,00 €/)).toBeInTheDocument();
+      expect(screen.getByText(/993\.00 €/)).toBeInTheDocument();
    });
 });
