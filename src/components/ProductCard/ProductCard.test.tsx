@@ -11,6 +11,7 @@ describe("ProductCard", () => {
             price={99300}
             currency="EUR"
             imageUrl="https://placehold.co/300x200?text=Product"
+            isLoading={false}
          />
       );
 
