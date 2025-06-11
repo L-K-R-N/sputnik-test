@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
-import type { TCurrency } from "../shared/types";
 import { useCurrency } from "./useCurrency";
 
-export const useFormatPrice = (price: number, currencyTo: TCurrency) => {
-   const { rates } = useCurrency();
+export const useFormatPrice = (price: number, currencyTo: string) => {
+   const { rates, defaultCurrency } = useCurrency();
    const [formattedPrice, setFormattedPrice] = useState<string>("");
 
    useEffect(() => {
+      const rateHasBeenLoad =
+         rates[currencyTo] && currencyTo !== defaultCurrency;
+      console.log(rateHasBeenLoad);
+
       setFormattedPrice(
          new Intl.NumberFormat("ru-RU", {
             style: "currency",
-            currency:
-               rates && rates[currencyTo] && currencyTo !== "RUB"
-                  ? currencyTo
-                  : "RUB",
+            currency: rateHasBeenLoad ? currencyTo : defaultCurrency,
          }).format(
-            rates && rates[currencyTo] && currencyTo !== "RUB"
-               ? rates[currencyTo].Value
+            rateHasBeenLoad
+               ? (price / rates[currencyTo].Value) * rates[currencyTo].Nominal
                : price
          )
       );
-   }, [rates, price, currencyTo]);
+   }, [rates, price, currencyTo, defaultCurrency]);
 
-   return { formattedPrice, isLoading: !(rates && rates[currencyTo]) };
+   return { formattedPrice, isLoading: !rates[currencyTo] };
 };

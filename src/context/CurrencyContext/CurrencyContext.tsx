@@ -1,12 +1,14 @@
 import React, { createContext, useEffect, useState } from "react";
-import type { TCurrency } from "../../shared/types";
 import type { ICurrencyContextValue } from "./CurrencyContext.types";
 import { useCurrencyRates } from "../../hooks/useCurrencyRates";
 
 const currencyContextDefaultValues: ICurrencyContextValue = {
+   defaultCurrency: "RUB",
    currency: "RUB",
    setCurrency: () => {},
-   rates: null,
+   rates: {
+      RUB: { Value: 1, Name: "Российский рубль", Nominal: 1, CharCode: "RUB" },
+   },
    isLoading: false,
    error: null,
 };
@@ -18,9 +20,9 @@ export const CurrencyContext = createContext<ICurrencyContextValue | null>(
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({
    children,
 }) => {
-   const [currency, setCurrency] = useState<TCurrency>(() => {
+   const [currency, setCurrency] = useState(() => {
       const saved = localStorage.getItem("selectedCurrency");
-      return (saved as TCurrency) || "RUB";
+      return saved || currencyContextDefaultValues.defaultCurrency;
    });
 
    useEffect(() => {
@@ -31,7 +33,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({
 
    const rates = React.useMemo(
       () => ({
-         RUB: { Value: 1, Name: "Российский рубль", Nominal: 1 },
+         ...currencyContextDefaultValues.rates,
          ...(fetchRatesResponse?.Valute || {}),
       }),
       [fetchRatesResponse]
@@ -40,6 +42,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({
    return (
       <CurrencyContext.Provider
          value={{
+            defaultCurrency: currencyContextDefaultValues.defaultCurrency,
             currency,
             setCurrency,
             rates,

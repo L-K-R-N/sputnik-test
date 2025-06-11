@@ -1,13 +1,23 @@
 import { Select, Skeleton, Typography } from "antd";
-import { useCurrency } from "../../hooks/useCurrency";
+import type { CurrencySelectorProps } from "./CurrencySelector.types";
+import { useState } from "react";
 
 const { Text } = Typography;
 
-export const CurrencySelector: React.FC = () => {
-   const { currency, setCurrency } = useCurrency();
-   const { rates } = useCurrency();
+export const CurrencySelector = ({
+   isLoading,
+   currency,
+   setCurrency,
+   options,
+}: CurrencySelectorProps) => {
+   const [localCur, setLocalCur] = useState(currency);
 
-   if (!(rates && rates[currency])) {
+   const handleChange = (c: string) => {
+      setLocalCur(c);
+      setCurrency(c);
+   };
+
+   if (isLoading) {
       return (
          <div style={{ marginBottom: 16 }}>
             <Text style={{ marginRight: 8 }}>Валюта:</Text>
@@ -20,17 +30,25 @@ export const CurrencySelector: React.FC = () => {
       <div style={{ marginBottom: 16 }}>
          <Text style={{ marginRight: 8 }}>Валюта:</Text>
          <Select
-            value={currency}
-            onChange={setCurrency}
-            style={{ width: 150 }}
+            value={localCur}
+            onChange={handleChange}
+            style={{ width: 250 }}
             showSearch
          >
-            {rates &&
-               Object.entries(rates).map(([key, value]) => (
-                  <Select.Option key={key} value={key}>
-                     {value.Name}
-                  </Select.Option>
-               ))}
+            {options.map((option) => (
+               <Select.Option key={option.CharCode} value={option.CharCode}>
+                  {option.Name}{" "}
+                  <Text role="article">
+                     (
+                     {new Intl.NumberFormat("ru-RU", {
+                        style: "currency",
+                        currency: "RUB",
+                        minimumFractionDigits: 3,
+                     }).format(option.Value / option.Nominal)}
+                     )
+                  </Text>
+               </Select.Option>
+            ))}
          </Select>
       </div>
    );

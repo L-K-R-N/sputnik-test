@@ -1,12 +1,10 @@
-import type { TCurrency } from "../../shared/types";
+import type { IValute } from "../../shared/types";
 
 export interface ICurrencyContextValue {
-   currency: TCurrency;
-   setCurrency: (currency: TCurrency) => void;
-   rates: Record<
-      string,
-      { Value: number; Name: string; Nominal: number }
-   > | null;
+   defaultCurrency: string;
+   currency: string;
+   setCurrency: (currency: string) => void;
+   rates: Record<string, IValute>;
    isLoading: boolean;
    error: Error | null;
 }

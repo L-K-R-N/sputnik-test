@@ -1,5 +1,5 @@
 import type { DefaultOptionType } from "antd/es/select";
-import type { IProduct, TCurrency } from "../shared/types";
+import type { IProduct } from "../shared/types";
 
 export const products: IProduct[] = [
    {
@@ -53,5 +53,5 @@ export const products: IProduct[] = [
 ];
 
 export interface IOptionType extends DefaultOptionType {
-   value: TCurrency;
+   value: string;
 }

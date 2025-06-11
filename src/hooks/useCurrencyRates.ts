@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchRates } from "../api/currencies";
+import { fetchRates } from "../api/currencies/currencies";
 
 export const useCurrencyRates = () => {
    return useQuery({

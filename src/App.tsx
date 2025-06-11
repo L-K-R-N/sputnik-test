@@ -5,11 +5,16 @@ import { products } from "./utils/constants";
 import { CurrencySelector } from "./components/CurrencySelector/CurrencySelector";
 
 function App() {
-   const { currency, isLoading } = useCurrency();
+   const { currency, setCurrency, isLoading, rates } = useCurrency();
 
    return (
       <div style={{ padding: 24 }}>
-         <CurrencySelector />
+         <CurrencySelector
+            isLoading={isLoading || !rates[currency]}
+            currency={currency}
+            options={Object.values(rates)}
+            setCurrency={setCurrency}
+         />
          <Row gutter={[16, 16]}>
             {products.map((product, index) => (
                <Col key={index} xs={24} sm={12} md={8} lg={6}>

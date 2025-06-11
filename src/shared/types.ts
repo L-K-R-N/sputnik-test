@@ -1,5 +1,3 @@
-import type { SUPPORTED_CURRENCIES } from "../api/currencies";
-
 export interface IProduct {
    title: string;
    origin: string;
@@ -7,4 +5,9 @@ export interface IProduct {
    imageUrl: string;
 }
 
-export type TCurrency = (typeof SUPPORTED_CURRENCIES)[number];
+export interface IValute {
+   Name: string;
+   Value: number;
+   Nominal: number;
+   CharCode: string;
+}

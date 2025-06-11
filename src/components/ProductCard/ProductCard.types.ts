@@ -1,6 +1,6 @@
-import type { IProduct, TCurrency } from "../../shared/types";
+import type { IProduct } from "../../shared/types";
 
 export interface ProductCardProps extends IProduct {
-   currency: TCurrency;
+   currency: string;
    isLoading?: boolean;
 }
