@@ -3,30 +3,33 @@ import { render, screen } from "@testing-library/react";
 import { ProductCard } from "./ProductCard";
 import * as hookModule from "../../hooks/useFormatPrice";
 
-vi.mock("../../hooks/useFormatPrice");
+vi.mock("../../hooks/useFormatPrice", () => ({
+   useFormatPrice: vi.fn(),
+}));
 
-const mockedUseFormatPrice = hookModule.useFormatPrice as unknown as (
-   price: number,
-   currency: string
-) => { formattedPrice: string; isLoading: boolean };
-
-const baseProps = {
-   title: "Ноутбук ASUS",
-   origin: "Китай",
-   currency: "RUB",
-   imageUrl: "https://example.com/image.jpg",
-};
+const mockedUseFormatPrice = hookModule.useFormatPrice as ReturnType<
+   typeof vi.fn
+>;
 
 describe("ProductCard", () => {
-   it("renders skeleton when isLoading is true", () => {
+   it("renders loading skeleton when isLoading is true", () => {
       mockedUseFormatPrice.mockReturnValue({
          formattedPrice: "99 999 ₽",
          isLoading: false,
       });
 
-      render(<ProductCard {...baseProps} isLoading={true} />);
+      render(
+         <ProductCard
+            title="Тестовый продукт"
+            origin="Россия"
+            price={10000}
+            currency="RUB"
+            imageUrl="https://example.com/test.jpg"
+            isLoading={true}
+         />
+      );
 
-      expect(screen.queryByText("Ноутбук ASUS")).not.toBeInTheDocument();
+      expect(screen.queryByText("Тестовый продукт")).not.toBeInTheDocument();
    });
 
    it("renders skeleton when price formatting is loading", () => {
@@ -35,7 +38,16 @@ describe("ProductCard", () => {
          isLoading: true,
       });
 
-      render(<ProductCard {...baseProps} isLoading={false} />);
+      render(
+         <ProductCard
+            title="Тестовый продукт"
+            origin="Россия"
+            price={10000}
+            currency="RUB"
+            imageUrl="https://example.com/test.jpg"
+            isLoading={false}
+         />
+      );
 
       expect(screen.queryByText("Ноутбук ASUS")).not.toBeInTheDocument();
    });
@@ -46,7 +58,16 @@ describe("ProductCard", () => {
          isLoading: false,
       });
 
-      render(<ProductCard {...baseProps} isLoading={false} />);
+      render(
+         <ProductCard
+            title="Тестовый продукт"
+            origin="Россия"
+            price={10000}
+            currency="RUB"
+            imageUrl="https://example.com/test.jpg"
+            isLoading={false}
+         />
+      );
 
       expect(screen.getByText("123 456 ₽")).toBeInTheDocument();
    });
