@@ -1,22 +1,53 @@
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ProductCard } from "./ProductCard";
-import { describe, expect, it } from "vitest";
+import * as hookModule from "../../hooks/useFormatPrice";
+
+vi.mock("../../hooks/useFormatPrice");
+
+const mockedUseFormatPrice = hookModule.useFormatPrice as unknown as (
+   price: number,
+   currency: string
+) => { formattedPrice: string; isLoading: boolean };
+
+const baseProps = {
+   title: "Ноутбук ASUS",
+   origin: "Китай",
+   currency: "RUB",
+   imageUrl: "https://example.com/image.jpg",
+};
 
 describe("ProductCard", () => {
-   it("Правильно рендерится", () => {
-      render(
-         <ProductCard
-            title="Стиральная машинка"
-            origin="Франция"
-            price={99300}
-            currency="EUR"
-            imageUrl="https://placehold.co/300x200?text=Product"
-            isLoading={false}
-         />
-      );
+   it("renders skeleton when isLoading is true", () => {
+      mockedUseFormatPrice.mockReturnValue({
+         formattedPrice: "99 999 ₽",
+         isLoading: false,
+      });
 
-      expect(screen.getByText("Стиральная машинка")).toBeInTheDocument();
-      expect(screen.getByText("Производитель: Франция")).toBeInTheDocument();
-      expect(screen.getByText(/993\.00 €/)).toBeInTheDocument();
+      render(<ProductCard {...baseProps} isLoading={true} />);
+
+      expect(screen.queryByText("Ноутбук ASUS")).not.toBeInTheDocument();
+   });
+
+   it("renders skeleton when price formatting is loading", () => {
+      mockedUseFormatPrice.mockReturnValue({
+         formattedPrice: "",
+         isLoading: true,
+      });
+
+      render(<ProductCard {...baseProps} isLoading={false} />);
+
+      expect(screen.queryByText("Ноутбук ASUS")).not.toBeInTheDocument();
+   });
+
+   it("displays formatted price from hook", () => {
+      mockedUseFormatPrice.mockReturnValue({
+         formattedPrice: "123 456 ₽",
+         isLoading: false,
+      });
+
+      render(<ProductCard {...baseProps} isLoading={false} />);
+
+      expect(screen.getByText("123 456 ₽")).toBeInTheDocument();
    });
 });
